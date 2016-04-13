@@ -12,35 +12,32 @@ services:
     image: gliderlabs/registrator:master
     hostname: registrator
     links:
-      - consul:consul
+      - consul
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock"
     command: -internal consul://consul:8500
 
   lb:
     image: chenglong/nginx-consul-template
-    container_name: lb
     ports:
       - "80:80"
     environment:
       - SERVICE=myapp
-    depends_on:
-      - app
     links:
-      - consul:consul
+      - consul
+      - app
 
   app:
-    build: ./node
+    image: chenglong/simple-node
     ports:
       - "8080"
     environment:
       - SERVICE_NAME=myapp
-    depends_on:
+    links:
       - redis
 
   redis:
     image: redis
-    container_name: redis
     command: redis-server --appendonly yes
     volumes:
       - redis-data:/data
