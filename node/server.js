@@ -5,11 +5,7 @@ const express = require('express'),
       redis = require('redis'),
       os = require('os');
 
-const appPort = 8080,
-      redisHost = process.env.REDIS_IP || '127.0.0.1',
-      redisPort = process.env.REDIS_PORT || 6379;
-const client = redis.createClient(redisPort, redisHost);
-
+const client = redis.createClient(6379, 'redis');
 const app = express();
 
 app.get('/', function(req, res, next) {
@@ -19,6 +15,7 @@ app.get('/', function(req, res, next) {
   });
 });
 
+const appPort = 8080;
 http.createServer(app).listen(appPort, function() {
   console.log('Listening on port ' + appPort);
 });
